@@ -4,6 +4,20 @@ LABEL version="0.1.2"
 LABEL discription="リモートデスクトップ接続とSSH接続が可能なUbuntu:18.04のコンテナです。"
 
 ARG host_name="Challenger"
+# Proxy設定
+ENV ftp_proxy 'ftp://your.porxy.url:port'
+ENV http_proxy 'http://your.porxy.url:port'
+ENV https_proxy 'https://your.proxy.url:port'
+ENV socks_proxy 'socks://your.proxy.url:port'
+ENV no_proxy '127.0.0.1,localhost,xxx.xxx.xxx.xxx'
+
+RUN : "apt-getコマンドに対するProxy設定" \
+ && { \
+  echo 'Acquire::http:proxy "'${ftp_proxy}'";'; \
+  echo 'Acquire::https:proxy "'${http_proxy}'";'; \
+  echo 'Acquire::ftp:proxy "'${ftp_proxy}'";'; \
+  echo 'Acquire::socks:proxy "'${socks_proxy}'";'; \
+    } | tee /etc/apt/apt.conf
 ENV DEBIAN_FRONTEND=noninteractive \
     HOSTNAME=$host_name
 
